@@ -44,11 +44,11 @@ export const IntegerInput = ({
         !inputError &&
         !disableMultiplyBy1e18 && (
           <div
-            className="space-x-4 flex tooltip tooltip-top tooltip-secondary before:content-[attr(data-tip)] before:right-[-10px] before:left-auto before:transform-none"
-            data-tip="Multiply by 1e18 (wei)"
+            className="space-x-4 flex"
+            title="Multiply by 1e18 (wei)"
           >
             <button
-              className={`${disabled ? "cursor-not-allowed" : "cursor-pointer"} font-semibold px-4 text-accent`}
+              className={`${disabled ? "cursor-not-allowed" : "cursor-pointer"} font-semibold px-4 text-blue-600`}
               onClick={multiplyBy1e18}
               disabled={disabled}
               type="button"

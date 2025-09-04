@@ -40,8 +40,8 @@ export const HeaderMenuLinks = () => {
               href={href}
               passHref
               className={`${
-                isActive ? "bg-secondary shadow-md" : ""
-              } hover:bg-secondary hover:shadow-md focus:!bg-secondary active:!text-neutral py-1.5 px-3 text-sm rounded-full gap-2 grid grid-flow-col`}
+                isActive ? "bg-blue-100 shadow-md" : ""
+              } hover:bg-blue-100 hover:shadow-md focus:bg-blue-100 active:text-gray-900 py-1.5 px-3 text-sm rounded-full gap-2 flex items-center`}
             >
               {icon}
               <span>{label}</span>
@@ -66,14 +66,14 @@ export const Header = () => {
   });
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 shrink-0 justify-between z-20 shadow-md shadow-secondary px-0 sm:px-2">
-      <div className="navbar-start w-auto lg:w-1/2">
-        <details className="dropdown" ref={burgerMenuRef}>
-          <summary className="ml-1 btn btn-ghost lg:hidden hover:bg-transparent">
+    <div className="sticky lg:static top-0 flex items-center justify-between  min-h-0 shrink-0 z-20 shadow-md px-0 sm:px-2">
+      <div className="flex items-center w-auto lg:w-1/2">
+        <details className="relative ml-1 lg:hidden" ref={burgerMenuRef}>
+          <summary className="flex items-center justify-center p-2 rounded-lg hover:bg-gray-100 dark:bg-gray-600 transition-colors cursor-pointer">
             <Bars3Icon className="h-1/2" />
           </summary>
           <ul
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow-sm bg-base-100 rounded-box w-52"
+            className="absolute left-0 top-full mt-2 p-2 shadow-lg  rounded-lg w-52 flex flex-col gap-1 z-50"
             onClick={() => {
               burgerMenuRef?.current?.removeAttribute("open");
             }}
@@ -90,11 +90,11 @@ export const Header = () => {
             <span className="text-xs">Ethereum dev stack</span>
           </div>
         </Link>
-        <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
+        <ul className="hidden lg:flex lg:flex-nowrap px-1 gap-2">
           <HeaderMenuLinks />
         </ul>
       </div>
-      <div className="navbar-end grow mr-4">
+      <div className="flex items-center grow justify-end mr-4">
         <RainbowKitCustomConnectButton />
         {isLocalNetwork && <FaucetButton />}
       </div>

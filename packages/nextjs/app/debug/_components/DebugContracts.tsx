@@ -3,7 +3,7 @@
 import { useEffect, useMemo } from "react";
 import { useSessionStorage } from "usehooks-ts";
 import { BarsArrowUpIcon } from "@heroicons/react/20/solid";
-import { ContractUI } from "~~/app/debug/_components/contract";
+import { ContractUI } from "~~/app/(dev)/debug/_components/contract";
 import { ContractName, GenericContract } from "~~/utils/scaffold-eth/contract";
 import { useAllContracts } from "~~/utils/scaffold-eth/contractsData";
 
@@ -41,17 +41,17 @@ export function DebugContracts() {
             <div className="flex flex-row gap-2 w-full max-w-7xl pb-1 px-6 lg:px-10 flex-wrap">
               {contractNames.map(contractName => (
                 <button
-                  className={`btn btn-secondary btn-sm font-light hover:border-transparent ${
+                  className={`inline-flex items-center px-3 py-1 text-sm font-light rounded-lg transition-colors hover:border-transparent ${
                     contractName === selectedContract
-                      ? "bg-base-300 hover:bg-base-300 no-animation"
-                      : "bg-base-100 hover:bg-secondary"
+                      ? "bg-gray-200 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-700"
+                      : "bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
                   }`}
                   key={contractName}
                   onClick={() => setSelectedContract(contractName)}
                 >
                   {contractName}
                   {(contractsData[contractName] as GenericContract)?.external && (
-                    <span className="tooltip tooltip-top tooltip-accent" data-tip="External contract">
+                    <span className="relative ml-2" title="External contract">
                       <BarsArrowUpIcon className="h-4 w-4 cursor-pointer" />
                     </span>
                   )}

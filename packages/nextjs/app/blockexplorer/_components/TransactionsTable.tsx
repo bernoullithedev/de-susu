@@ -11,16 +11,16 @@ export const TransactionsTable = ({ blocks, transactionReceipts }: TransactionsT
   return (
     <div className="flex justify-center px-4 md:px-0">
       <div className="overflow-x-auto w-full shadow-2xl rounded-xl">
-        <table className="table text-xl bg-base-100 table-zebra w-full md:table-md table-sm">
+        <table className="w-full text-xl bg-gray-200 dark:bg-gray-800/50 border-collapse">
           <thead>
-            <tr className="rounded-xl text-sm text-base-content">
-              <th className="bg-primary">Transaction Hash</th>
-              <th className="bg-primary">Function Called</th>
-              <th className="bg-primary">Block Number</th>
-              <th className="bg-primary">Time Mined</th>
-              <th className="bg-primary">From</th>
-              <th className="bg-primary">To</th>
-              <th className="bg-primary text-end">Value ({targetNetwork.nativeCurrency.symbol})</th>
+            <tr className="rounded-xl text-sm  bg-blue-600 text-white">
+              <th className="p-4 text-left">Transaction Hash</th>
+              <th className="p-4 text-left">Function Called</th>
+              <th className="p-4 text-left">Block Number</th>
+              <th className="p-4 text-left">Time Mined</th>
+              <th className="p-4 text-left">From</th>
+              <th className="p-4 text-left">To</th>
+              <th className="p-4 text-right">Value ({targetNetwork.nativeCurrency.symbol})</th>
             </tr>
           </thead>
           <tbody>
@@ -31,22 +31,22 @@ export const TransactionsTable = ({ blocks, transactionReceipts }: TransactionsT
                 const functionCalled = tx.input.substring(0, 10);
 
                 return (
-                  <tr key={tx.hash} className="hover text-sm">
-                    <td className="w-1/12 md:py-4">
+                  <tr key={tx.hash} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 text-sm border-b border-gray-200">
+                    <td className="w-1/12 p-4">
                       <TransactionHash hash={tx.hash} />
                     </td>
-                    <td className="w-2/12 md:py-4">
+                    <td className="w-2/12 p-4">
                       {tx.functionName === "0x" ? "" : <span className="mr-1">{tx.functionName}</span>}
                       {functionCalled !== "0x" && (
-                        <span className="badge badge-primary font-bold text-xs">{functionCalled}</span>
+                        <span className="inline-flex items-center px-2 py-1 text-xs font-bold bg-blue-600 text-white rounded-full">{functionCalled}</span>
                       )}
                     </td>
-                    <td className="w-1/12 md:py-4">{block.number?.toString()}</td>
-                    <td className="w-2/12 md:py-4">{timeMined}</td>
-                    <td className="w-2/12 md:py-4">
+                    <td className="w-1/12 p-4">{block.number?.toString()}</td>
+                    <td className="w-2/12 p-4">{timeMined}</td>
+                    <td className="w-2/12 p-4">
                       <Address address={tx.from} size="sm" onlyEnsOrAddress />
                     </td>
-                    <td className="w-2/12 md:py-4">
+                    <td className="w-2/12 p-4">
                       {!receipt?.contractAddress ? (
                         tx.to && <Address address={tx.to} size="sm" onlyEnsOrAddress />
                       ) : (
@@ -56,7 +56,7 @@ export const TransactionsTable = ({ blocks, transactionReceipts }: TransactionsT
                         </div>
                       )}
                     </td>
-                    <td className="text-right md:py-4">
+                    <td className="text-right p-4">
                       {formatEther(tx.value)} {targetNetwork.nativeCurrency.symbol}
                     </td>
                   </tr>

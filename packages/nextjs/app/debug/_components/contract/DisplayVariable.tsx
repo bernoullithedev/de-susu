@@ -60,20 +60,20 @@ export const DisplayVariable = ({
     <div className="space-y-1 pb-2">
       <div className="flex items-center">
         <h3 className="font-medium text-lg mb-0 break-all">{abiFunction.name}</h3>
-        <button className="btn btn-ghost btn-xs" onClick={async () => await refetch()}>
+        <button className="inline-flex items-center p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors" onClick={async () => await refetch()}>
           {isFetching ? (
-            <span className="loading loading-spinner loading-xs"></span>
+            <span className="animate-spin w-4 h-4 border-2 border-gray-300 dark:border-gray-600 border-t-blue-600 rounded-full"></span>
           ) : (
             <ArrowPathIcon className="h-3 w-3 cursor-pointer" aria-hidden="true" />
           )}
         </button>
         <InheritanceTooltip inheritedFrom={inheritedFrom} />
       </div>
-      <div className="text-base-content/80 flex flex-col items-start">
+      <div className="text-gray-700 dark:text-gray-300 flex flex-col items-start">
         <div>
           <div
             className={`break-all block transition bg-transparent ${
-              showAnimation ? "bg-warning rounded-xs animate-pulse-fast" : ""
+              showAnimation ? "bg-yellow-200 dark:bg-yellow-600 rounded-sm animate-pulse" : ""
             }`}
           >
             {displayTxResult(result)}

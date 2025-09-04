@@ -52,19 +52,19 @@ export const AddressInfoDropdown = ({
 
   return (
     <>
-      <details ref={dropdownRef} className="dropdown dropdown-end leading-3">
-        <summary className="btn btn-secondary btn-sm pl-0 pr-2 shadow-md dropdown-toggle gap-0 h-auto!">
+      <details ref={dropdownRef} className="relative leading-3">
+        <summary className="inline-flex items-center px-2 py-1 text-sm font-medium bg-gray-600 text-white rounded-lg shadow-md gap-0 cursor-pointer hover:bg-gray-700 transition-colors">
           <BlockieAvatar address={checkSumAddress} size={30} ensImage={ensAvatar} />
           <span className="ml-2 mr-1">
             {isENS(displayName) ? displayName : checkSumAddress?.slice(0, 6) + "..." + checkSumAddress?.slice(-4)}
           </span>
           <ChevronDownIcon className="h-6 w-4 ml-2 sm:ml-0" />
         </summary>
-        <ul className="dropdown-content menu z-2 p-2 mt-2 shadow-center shadow-accent bg-base-200 rounded-box gap-1">
+        <ul className="absolute right-0 top-full z-50 p-2 mt-2 shadow-lg bg-gray-100 dark:bg-gray-700/50 rounded-lg flex flex-col gap-1 w-64">
           <NetworkOptions hidden={!selectingNetwork} />
           <li className={selectingNetwork ? "hidden" : ""}>
             <div
-              className="h-8 btn-sm rounded-xl! flex gap-3 py-3 cursor-pointer"
+              className="h-8 px-3 py-2 rounded-lg flex gap-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
               onClick={() => copyAddressToClipboard(checkSumAddress)}
             >
               {isAddressCopiedToClipboard ? (
@@ -81,13 +81,13 @@ export const AddressInfoDropdown = ({
             </div>
           </li>
           <li className={selectingNetwork ? "hidden" : ""}>
-            <label htmlFor="qrcode-modal" className="h-8 btn-sm rounded-xl! flex gap-3 py-3">
+            <label htmlFor="qrcode-modal" className="h-8 px-3 py-2 rounded-lg flex gap-3 cursor-pointer hover:bg-gray-200 transition-colors">
               <QrCodeIcon className="h-6 w-4 ml-2 sm:ml-0" />
               <span className="whitespace-nowrap">View QR Code</span>
             </label>
           </li>
           <li className={selectingNetwork ? "hidden" : ""}>
-            <button className="h-8 btn-sm rounded-xl! flex gap-3 py-3" type="button">
+            <button className="h-8 px-3 py-2 rounded-lg flex gap-3 hover:bg-gray-200 transition-colors" type="button">
               <ArrowTopRightOnSquareIcon className="h-6 w-4 ml-2 sm:ml-0" />
               <a
                 target="_blank"
@@ -102,7 +102,7 @@ export const AddressInfoDropdown = ({
           {allowedNetworks.length > 1 ? (
             <li className={selectingNetwork ? "hidden" : ""}>
               <button
-                className="h-8 btn-sm rounded-xl! flex gap-3 py-3"
+                className="h-8 px-3 py-2 rounded-lg flex gap-3 hover:bg-gray-200 transition-colors"
                 type="button"
                 onClick={() => {
                   setSelectingNetwork(true);
@@ -114,7 +114,7 @@ export const AddressInfoDropdown = ({
           ) : null}
           {connector?.id === BURNER_WALLET_ID ? (
             <li>
-              <label htmlFor="reveal-burner-pk-modal" className="h-8 btn-sm rounded-xl! flex gap-3 py-3 text-error">
+              <label htmlFor="reveal-burner-pk-modal" className="h-8 px-3 py-2 rounded-lg flex gap-3 cursor-pointer hover:bg-gray-200 transition-colors text-red-500">
                 <EyeIcon className="h-6 w-4 ml-2 sm:ml-0" />
                 <span>Reveal Private Key</span>
               </label>
@@ -122,7 +122,7 @@ export const AddressInfoDropdown = ({
           ) : null}
           <li className={selectingNetwork ? "hidden" : ""}>
             <button
-              className="menu-item text-error h-8 btn-sm rounded-xl! flex gap-3 py-3"
+              className="h-8 px-3 py-2 rounded-lg flex gap-3 hover:bg-gray-200 transition-colors text-red-500"
               type="button"
               onClick={() => disconnect()}
             >

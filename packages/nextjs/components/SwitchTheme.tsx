@@ -29,13 +29,13 @@ export const SwitchTheme = ({ className }: { className?: string }) => {
       <input
         id="theme-toggle"
         type="checkbox"
-        className="toggle bg-secondary toggle-primary hover:bg-accent transition-all"
+        className="w-12 h-6 bg-gray-300 rounded-full appearance-none cursor-pointer checked:bg-blue-600 hover:bg-blue-500 transition-all duration-300 before:content-[''] before:w-4 before:h-4 before:bg-white before:rounded-full before:absolute before:top-1 before:left-1 before:transition-transform checked:before:translate-x-6 relative"
         onChange={handleToggle}
         checked={isDarkMode}
       />
-      <label htmlFor="theme-toggle" className={`swap swap-rotate ${!isDarkMode ? "swap-active" : ""}`}>
-        <SunIcon className="swap-on h-5 w-5" />
-        <MoonIcon className="swap-off h-5 w-5" />
+      <label htmlFor="theme-toggle" className={`cursor-pointer transition-transform duration-300 ${!isDarkMode ? "rotate-0" : "rotate-180"}`}>
+        <SunIcon className={`h-5 w-5 ${!isDarkMode ? "block" : "hidden"}`} />
+        <MoonIcon className={`h-5 w-5 ${isDarkMode ? "block" : "hidden"}`} />
       </label>
     </div>
   );

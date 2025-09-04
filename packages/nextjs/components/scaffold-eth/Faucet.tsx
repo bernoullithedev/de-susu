@@ -40,11 +40,11 @@ export const Faucet = () => {
           <>
             <p className="font-bold mt-0 mb-1">Cannot connect to local provider</p>
             <p className="m-0">
-              - Did you forget to run <code className="italic bg-base-300 text-base font-bold">yarn chain</code> ?
+              - Did you forget to run <code className="italic bg-gray-200 text-base font-bold">yarn chain</code> ?
             </p>
             <p className="mt-1 break-normal">
-              - Or you can change <code className="italic bg-base-300 text-base font-bold">targetNetwork</code> in{" "}
-              <code className="italic bg-base-300 text-base font-bold">scaffold.config.ts</code>
+              - Or you can change <code className="italic bg-gray-200 text-base font-bold">targetNetwork</code> in{" "}
+              <code className="italic bg-gray-200 text-base font-bold">scaffold.config.ts</code>
             </p>
           </>,
         );
@@ -81,17 +81,17 @@ export const Faucet = () => {
 
   return (
     <div>
-      <label htmlFor="faucet-modal" className="btn btn-primary btn-sm font-normal gap-1">
+      <label htmlFor="faucet-modal" className="inline-flex items-center px-3 py-1 text-sm font-normal gap-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
         <BanknotesIcon className="h-4 w-4" />
         <span>Faucet</span>
       </label>
-      <input type="checkbox" id="faucet-modal" className="modal-toggle" />
-      <label htmlFor="faucet-modal" className="modal cursor-pointer">
-        <label className="modal-box relative">
+      <input type="checkbox" id="faucet-modal" className="hidden peer" />
+      <div className="fixed inset-0 z-50 hidden peer-checked:flex items-center justify-center bg-black/20 dark:bg-black/50 backdrop-blur-md">
+        <div className="rounded-lg p-6 max-w-md w-full mx-4 relative">
           {/* dummy input to capture event onclick on modal box */}
           <input className="h-0 w-0 absolute top-0 left-0" />
           <h3 className="text-xl font-bold mb-3">Local Faucet</h3>
-          <label htmlFor="faucet-modal" className="btn btn-ghost btn-sm btn-circle absolute right-3 top-3">
+          <label htmlFor="faucet-modal" className="absolute right-3 top-3 w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 cursor-pointer">
             ✕
           </label>
           <div className="space-y-3">
@@ -112,18 +112,18 @@ export const Faucet = () => {
                 onChange={value => setInputAddress(value as AddressType)}
               />
               <EtherInput placeholder="Amount to send" value={sendValue} onChange={value => setSendValue(value)} />
-              <button className="h-10 btn btn-primary btn-sm px-2 rounded-full" onClick={sendETH} disabled={loading}>
+              <button className="h-10 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50 gap-2" onClick={sendETH} disabled={loading}>
                 {!loading ? (
                   <BanknotesIcon className="h-6 w-6" />
                 ) : (
-                  <span className="loading loading-spinner loading-sm"></span>
+                  <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
                 )}
                 <span>Send</span>
               </button>
             </div>
           </div>
-        </label>
-      </label>
+        </div>
+      </div>
     </div>
   );
 };

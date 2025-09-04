@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createWalletClient, http, parseEther } from "viem";
-import { hardhat } from "viem/chains";
+import { foundry} from "viem/chains";
 import { useAccount } from "wagmi";
 import { BanknotesIcon } from "@heroicons/react/24/outline";
 import { useTransactor } from "~~/hooks/scaffold-eth";
@@ -13,7 +13,7 @@ const NUM_OF_ETH = "1";
 const FAUCET_ADDRESS = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 
 const localWalletClient = createWalletClient({
-  chain: hardhat,
+  chain: foundry,
   transport: http(),
 });
 
@@ -46,7 +46,7 @@ export const FaucetButton = () => {
   };
 
   // Render only on local chain
-  if (ConnectedChain?.id !== hardhat.id) {
+  if (ConnectedChain?.id !== foundry.id) {
     return null;
   }
 
@@ -57,15 +57,14 @@ export const FaucetButton = () => {
       className={
         !isBalanceZero
           ? "ml-1"
-          : "ml-1 tooltip tooltip-bottom tooltip-primary tooltip-open font-bold before:left-auto before:transform-none before:content-[attr(data-tip)] before:-translate-x-2/5"
+          : "ml-1 relative font-bold"
       }
-      data-tip="Grab funds from faucet"
     >
-      <button className="btn btn-secondary btn-sm px-2 rounded-full" onClick={sendETH} disabled={loading}>
+      <button className="inline-flex items-center px-2 py-1 text-sm font-medium bg-gray-600 text-white rounded-full hover:bg-gray-700 transition-colors disabled:opacity-50" onClick={sendETH} disabled={loading}>
         {!loading ? (
           <BanknotesIcon className="h-4 w-4" />
         ) : (
-          <span className="loading loading-spinner loading-xs"></span>
+          <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
         )}
       </button>
     </div>

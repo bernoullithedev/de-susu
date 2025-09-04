@@ -27,32 +27,36 @@ export const RevealBurnerPKModal = () => {
   return (
     <>
       <div>
-        <input type="checkbox" id="reveal-burner-pk-modal" className="modal-toggle" ref={modalCheckboxRef} />
-        <label htmlFor="reveal-burner-pk-modal" className="modal cursor-pointer">
-          <label className="modal-box relative">
+        <input type="checkbox" id="reveal-burner-pk-modal" className="hidden peer" ref={modalCheckboxRef} />
+        <div className="fixed inset-0 z-50 hidden peer-checked:flex items-center justify-center bg-black bg-opacity-50">
+          <div className=" rounded-lg p-6 max-w-lg w-full mx-4 relative">
             {/* dummy input to capture event onclick on modal box */}
             <input className="h-0 w-0 absolute top-0 left-0" />
-            <label htmlFor="reveal-burner-pk-modal" className="btn btn-ghost btn-sm btn-circle absolute right-3 top-3">
+            <label htmlFor="reveal-burner-pk-modal" className="absolute right-3 top-3 w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 cursor-pointer">
               ✕
             </label>
             <div>
               <p className="text-lg font-semibold m-0 p-0">Copy Burner Wallet Private Key</p>
-              <div role="alert" className="alert alert-warning mt-4">
-                <ShieldExclamationIcon className="h-6 w-6" />
-                <span className="font-semibold">
+              <div role="alert" className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4 flex items-start gap-3">
+                <ShieldExclamationIcon className="h-6 w-6 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <span className="font-semibold text-yellow-800">
                   Burner wallets are intended for local development only and are not safe for storing real funds.
                 </span>
               </div>
-              <p>
+              <p className="mt-4">
                 Your Private Key provides <strong>full access</strong> to your entire wallet and funds. This is
                 currently stored <strong>temporarily</strong> in your browser.
               </p>
-              <button className="btn btn-outline btn-error" onClick={handleCopyPK} disabled={isCopiedToClipboard}>
+              <button
+                className="inline-flex items-center px-4 py-2 border border-red-500 text-red-600  rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 mt-4"
+                onClick={handleCopyPK}
+                disabled={isCopiedToClipboard}
+              >
                 Copy Private Key To Clipboard
               </button>
             </div>
-          </label>
-        </label>
+          </div>
+        </div>
       </div>
     </>
   );

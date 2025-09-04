@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { InheritanceTooltip } from "./InheritanceTooltip";
 import { Abi, AbiFunction } from "abitype";
 import { Address } from "viem";
@@ -12,7 +12,7 @@ import {
   getInitialFormState,
   getParsedContractFunctionArgs,
   transformAbiFunction,
-} from "~~/app/debug/_components/contract";
+} from "~~/app/(dev)/debug/_components/contract";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 
@@ -52,7 +52,7 @@ export const ReadOnlyFunctionForm = ({
     }
   }, [error]);
 
-  const transformedFunction = useMemo(() => transformAbiFunction(abiFunction), [abiFunction]);
+  const transformedFunction = transformAbiFunction(abiFunction);
   const inputElements = transformedFunction.inputs.map((input, inputIndex) => {
     const key = getFunctionInputKey(abiFunction.name, input, inputIndex);
     return (
@@ -79,21 +79,21 @@ export const ReadOnlyFunctionForm = ({
       <div className="flex flex-col md:flex-row justify-between gap-2 flex-wrap">
         <div className="grow w-full md:max-w-[80%]">
           {result !== null && result !== undefined && (
-            <div className="bg-secondary rounded-3xl text-sm px-4 py-1.5 break-words overflow-auto">
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-3xl text-sm px-4 py-1.5 break-words overflow-auto">
               <p className="font-bold m-0 mb-1">Result:</p>
               <pre className="whitespace-pre-wrap break-words">{displayTxResult(result, "sm")}</pre>
             </div>
           )}
         </div>
         <button
-          className="btn btn-secondary btn-sm self-end md:self-start"
+          className="inline-flex items-center px-3 py-1 text-sm font-medium bg-gray-600 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-lg transition-colors disabled:opacity-50 self-end md:self-start"
           onClick={async () => {
             const { data } = await refetch();
             setResult(data);
           }}
           disabled={isFetching}
         >
-          {isFetching && <span className="loading loading-spinner loading-xs"></span>}
+          {isFetching && <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>}
           Read 📡
         </button>
       </div>

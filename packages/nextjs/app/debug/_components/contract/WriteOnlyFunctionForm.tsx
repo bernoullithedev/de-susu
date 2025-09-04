@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { InheritanceTooltip } from "./InheritanceTooltip";
 import { Abi, AbiFunction } from "abitype";
 import { Address, TransactionReceipt } from "viem";
@@ -12,7 +12,7 @@ import {
   getInitialFormState,
   getParsedContractFunctionArgs,
   transformAbiFunction,
-} from "~~/app/debug/_components/contract";
+} from "~~/app/(dev)/debug/_components/contract";
 import { IntegerInput } from "~~/components/scaffold-eth";
 import { useTransactor } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
@@ -78,7 +78,8 @@ export const WriteOnlyFunctionForm = ({
     setDisplayedTxResult(txResult);
   }, [txResult]);
 
-  const transformedFunction = useMemo(() => transformAbiFunction(abiFunction), [abiFunction]);
+  // TODO use `useMemo` to optimize also update in ReadOnlyFunctionForm
+  const transformedFunction = transformAbiFunction(abiFunction);
   const inputs = transformedFunction.inputs.map((input, inputIndex) => {
     const key = getFunctionInputKey(abiFunction.name, input, inputIndex);
     return (
@@ -125,14 +126,11 @@ export const WriteOnlyFunctionForm = ({
             <div className="grow basis-0">{displayedTxResult ? <TxReceipt txResult={displayedTxResult} /> : null}</div>
           )}
           <div
-            className={`flex ${
-              writeDisabled &&
-              "tooltip tooltip-bottom tooltip-secondary before:content-[attr(data-tip)] before:-translate-x-1/3 before:left-auto before:transform-none"
-            }`}
-            data-tip={`${writeDisabled && "Wallet not connected or in the wrong network"}`}
+            className={`flex ${writeDisabled && "relative"}`}
+            title={`${writeDisabled && "Wallet not connected or in the wrong network"}`}
           >
-            <button className="btn btn-secondary btn-sm" disabled={writeDisabled || isPending} onClick={handleWrite}>
-              {isPending && <span className="loading loading-spinner loading-xs"></span>}
+            <button className="inline-flex items-center px-3 py-1 text-sm font-medium bg-gray-600 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-lg transition-colors disabled:opacity-50" disabled={writeDisabled || isPending} onClick={handleWrite}>
+              {isPending && <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>}
               Send 💸
             </button>
           </div>

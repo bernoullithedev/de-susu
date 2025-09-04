@@ -7,8 +7,8 @@ export const AddressLogsTab = ({ address }: { address: Address }) => {
 
   return (
     <div className="flex flex-col gap-3 p-4">
-      <div className="mockup-code overflow-auto max-h-[500px]">
-        <pre className="px-5 whitespace-pre-wrap break-words">
+      <div className="bg-gray-900 text-gray-100 rounded-lg p-4 overflow-auto max-h-[500px] font-mono text-sm">
+        <pre className="whitespace-pre-wrap break-words">
           {contractLogs.map((log, i) => (
             <div key={i}>
               <strong>Log:</strong> {JSON.stringify(log, replacer, 2)}

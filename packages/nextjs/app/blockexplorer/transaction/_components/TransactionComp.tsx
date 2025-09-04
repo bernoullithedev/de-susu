@@ -39,13 +39,13 @@ const TransactionComp = ({ txHash }: { txHash: Hash }) => {
 
   return (
     <div className="container mx-auto mt-10 mb-20 px-10 md:px-0">
-      <button className="btn btn-sm btn-primary" onClick={() => router.back()}>
+      <button className="inline-flex items-center px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" onClick={() => router.back()}>
         Back
       </button>
       {transaction ? (
         <div className="overflow-x-auto">
-          <h2 className="text-3xl font-bold mb-4 text-center text-primary-content">Transaction Details</h2>{" "}
-          <table className="table rounded-lg bg-base-100 w-full shadow-lg md:table-lg table-md">
+          <h2 className="text-3xl font-bold mb-4 text-center text-gray-900">Transaction Details</h2>{" "}
+          <table className="w-full bg-white border-collapse shadow-lg rounded-lg">
             <tbody>
               <tr>
                 <td>
@@ -101,7 +101,7 @@ const TransactionComp = ({ txHash }: { txHash: Hash }) => {
                     ) : (
                       <>
                         <span className="mr-2">{getFunctionDetails(transaction)}</span>
-                        <span className="badge badge-primary font-bold">{functionCalled}</span>
+                        <span className="inline-flex items-center px-2 py-1 text-xs font-bold bg-blue-600 text-white rounded-full">{functionCalled}</span>
                       </>
                     )}
                   </div>
@@ -117,11 +117,11 @@ const TransactionComp = ({ txHash }: { txHash: Hash }) => {
                 <td>
                   <strong>Data:</strong>
                 </td>
-                <td className="form-control">
+                <td>
                   <textarea
                     readOnly
                     value={transaction.input}
-                    className="p-0 w-full textarea-primary bg-inherit h-[150px]"
+                    className="w-full p-2 bg-gray-50 border border-gray-300 rounded-md h-[150px] font-mono text-sm"
                   />
                 </td>
               </tr>
@@ -143,7 +143,7 @@ const TransactionComp = ({ txHash }: { txHash: Hash }) => {
           </table>
         </div>
       ) : (
-        <p className="text-2xl text-base-content">Loading...</p>
+        <p className="text-2xl text-gray-900">Loading...</p>
       )}
     </div>
   );

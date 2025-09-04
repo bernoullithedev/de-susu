@@ -32,7 +32,7 @@ export const RainbowKitCustomConnectButton = () => {
             {(() => {
               if (!connected) {
                 return (
-                  <button className="btn btn-primary btn-sm" onClick={openConnectModal} type="button">
+                  <button className="inline-flex items-center px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" onClick={openConnectModal} type="button">
                     Connect Wallet
                   </button>
                 );
@@ -50,7 +50,7 @@ export const RainbowKitCustomConnectButton = () => {
                       {chain.name}
                     </span>
                   </div>
-                  <AddressInfoDropdown
+                                    <AddressInfoDropdown
                     address={account.address as Address}
                     displayName={account.displayName}
                     ensAvatar={account.ensAvatar}
