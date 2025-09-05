@@ -18,6 +18,7 @@
   "dependencies": {
     "@base-org/account": "^2.1.0",
     "@base-org/account-ui": "^1.0.1",
+    "@coinbase/cdp-sdk": "^1.36.1",
     "@heroicons/react": "~2.1.5",
     "@hookform/resolvers": "^5.2.1",
     "@radix-ui/react-accordion": "^1.2.12",

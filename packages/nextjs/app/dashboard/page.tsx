@@ -11,6 +11,7 @@ import { OnboardingDialog } from "@/components/dashboard/onboarding-dialog"
 import { CreateVaultDialog } from "@/components/dashboard/create-vault-dialog"
 import DotCard from "@/components/ui/dot-card"
 import FaucetBalance from "~~/components/balance"
+import { useAccount, useBalance } from "wagmi"
 
 const mockVaults = [
   {
@@ -60,7 +61,13 @@ const mockVaults = [
 
 export default function DashboardPage() {
   const [vaults] = useState(mockVaults) // Change to [] to test empty state
-  
+  const { address } = useAccount()
+  const { data:usdc, isLoading } = useBalance({
+    address,
+    //chainId: baseSepolia.id,
+    token:"0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+
+  })
   const [showOnboarding, setShowOnboarding] = useState(true)
   const [showCreateVault, setShowCreateVault] = useState(false)
 
@@ -163,7 +170,7 @@ export default function DashboardPage() {
       </main>
 
       {/* Dialogs */}
-      <OnboardingDialog open={showOnboarding} onComplete={() => setShowOnboarding(false)} />
+      <OnboardingDialog open={Number(usdc?.formatted) ===0} onComplete={() => setShowOnboarding(false)} />
       <CreateVaultDialog open={showCreateVault} onOpenChange={setShowCreateVault} />
     </div>
   )
