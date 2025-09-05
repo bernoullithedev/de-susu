@@ -10,6 +10,7 @@ import { StatsOverview } from "@/components/dashboard/stats-overview"
 import { OnboardingDialog } from "@/components/dashboard/onboarding-dialog"
 import { CreateVaultDialog } from "@/components/dashboard/create-vault-dialog"
 import DotCard from "@/components/ui/dot-card"
+import FaucetBalance from "~~/components/balance"
 
 const mockVaults = [
   {
@@ -59,6 +60,7 @@ const mockVaults = [
 
 export default function DashboardPage() {
   const [vaults] = useState(mockVaults) // Change to [] to test empty state
+  
   const [showOnboarding, setShowOnboarding] = useState(true)
   const [showCreateVault, setShowCreateVault] = useState(false)
 
@@ -93,6 +95,7 @@ export default function DashboardPage() {
               </div>
               <h1 className="text-xl font-bold text-balance">Decentralized Susu Vault</h1>
             </div>
+            <FaucetBalance />
             <div className="flex items-center gap-2">
               <div className="text-sm text-muted-foreground">kwame.base.eth</div>
               <Avatar className="w-8 h-8">

@@ -6,22 +6,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./GroupPool.sol";
 import "./IGroupPool.sol";
-import "./IPublicResolver.sol";
+import "../PersonalVault/interfaces/IPublicResolver.sol";
+import "../PersonalVault/interfaces/IRegistrarController.sol";
 
 
-// Interface for Basenames RegistrarController (from Base repo)
-interface IRegistrarController {
-    function available(string calldata name) external view returns (bool);
-    function rentPrice(string calldata name, uint256 duration) external view returns (uint256);
-    function register(
-        string calldata name,
-        address owner,
-        uint256 duration,
-        address resolver,
-        bytes[] calldata data,
-        bool reverseRecord
-    ) external payable;
-}
+// Interface imported from PersonalVault/interfaces/IRegistrarController.sol
 
 /**
  * @title GroupPoolFactory
@@ -66,9 +55,13 @@ contract GroupPoolFactory is Ownable, ReentrancyGuard {
      */
     constructor(
         address _usdcToken,
-        address initialOwner
+        address initialOwner,
+        address _registrarController,
+        address _publicResolver
     ) Ownable(initialOwner) {
         usdcToken = _usdcToken;
+        registrarController = _registrarController;
+        publicResolver = _publicResolver;
         // Deploy implementation contract for minimal proxy pattern
         implementation = address(new GroupPool());
     }
