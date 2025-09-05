@@ -172,6 +172,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@base-org/account-ui@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@base-org/account-ui@npm:1.0.1"
+  peerDependencies:
+    "@base-org/account": "*"
+    clsx: "*"
+    preact: "*"
+    react: "*"
+    svelte: "*"
+    vue: "*"
+  peerDependenciesMeta:
+    react:
+      optional: true
+    svelte:
+      optional: true
+    vue:
+      optional: true
+  checksum: f4b6d2fca2bd0d48f69dfa94707671140e3a8e71903b23563703f4dafe9a5e551f11b835da496ff9e268e273f04b1f02860d0e432277a20ceb9c220d0280c8e5
+  languageName: node
+  linkType: hard
+
 "@base-org/account@npm:1.1.1":
   version: 1.1.1
   resolution: "@base-org/account@npm:1.1.1"
@@ -185,6 +206,22 @@ __metadata:
     viem: ^2.31.7
     zustand: 5.0.3
   checksum: f2eae7b3e9ab88c181e0902f952611812fd3f2d9fe092e9082d5c6fcee1e77445eb8090b01d7104963263c44a2f320536d45521a5a935febde1405a01cb6c496
+  languageName: node
+  linkType: hard
+
+"@base-org/account@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@base-org/account@npm:2.1.0"
+  dependencies:
+    "@noble/hashes": 1.4.0
+    clsx: 1.2.1
+    eventemitter3: 5.0.1
+    idb-keyval: 6.2.1
+    ox: 0.6.9
+    preact: 10.24.2
+    viem: ^2.31.7
+    zustand: 5.0.3
+  checksum: 4f2fd7e0c9ae21b9536b50aa3d5f5fcc14c841b911fe2054086d36e1623e0eefff029f9b6dd312bd4d1ff3ba1a5274f14999ab28d1327c05825324608563a77d
   languageName: node
   linkType: hard
 
@@ -3791,6 +3828,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@se-2/nextjs@workspace:packages/nextjs"
   dependencies:
+    "@base-org/account": ^2.1.0
+    "@base-org/account-ui": ^1.0.1
     "@heroicons/react": ~2.1.5
     "@hookform/resolvers": ^5.2.1
     "@radix-ui/react-accordion": ^1.2.12
@@ -3814,6 +3853,7 @@ __metadata:
     "@types/react": ~19.0.7
     "@uniswap/sdk-core": ~5.8.2
     "@uniswap/v2-sdk": ~4.6.1
+    "@wagmi/connectors": ^5.9.9
     abitype: 1.0.6
     autoprefixer: ~10.4.20
     bgipfs: ~0.0.12
@@ -5066,6 +5106,29 @@ __metadata:
     typescript:
       optional: true
   checksum: 11468e455d34a82b8dba1b306134cd80250dd8f790952f1a1faad9713ec4e0b04248720bfcab8df27c5bb0855755c03dc8b6e2aee29062af39aa21887d240378
+  languageName: node
+  linkType: hard
+
+"@wagmi/connectors@npm:^5.9.9":
+  version: 5.9.9
+  resolution: "@wagmi/connectors@npm:5.9.9"
+  dependencies:
+    "@base-org/account": 1.1.1
+    "@coinbase/wallet-sdk": 4.3.6
+    "@gemini-wallet/core": 0.2.0
+    "@metamask/sdk": 0.32.0
+    "@safe-global/safe-apps-provider": 0.18.6
+    "@safe-global/safe-apps-sdk": 9.1.0
+    "@walletconnect/ethereum-provider": 2.21.1
+    cbw-sdk: "npm:@coinbase/wallet-sdk@3.9.3"
+  peerDependencies:
+    "@wagmi/core": 2.20.3
+    typescript: ">=5.0.4"
+    viem: 2.x
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 76b295be0a4e18811061992d8f2545420ab286347dcb42ad3c4ae36ebb78c9293200b31c57c05799332e176fbf98d73674b5792e836da7098e5d467218db4e7a
   languageName: node
   linkType: hard
 
