@@ -30,63 +30,7 @@ It replaces fraud-prone, informal systems with smart contracts, allowing users t
 | **Fiat On-Ramp** | [Base Pay](https://docs.base.org/guides/base-pay) | Buy USDC with card in-app |
 | **Identity** | [ENS](https://ens.domains) | Human-readable names & reputation |
 | **Frontend Framework**| [Scaffold-ETH 2](https://github.com/scaffold-eth/scaffold-eth-2) | Next.js boilerplate for fast development |
-| **Frontend** | Next.js, RainbowKit, wagmi | User interface and wallet connection |
-
-## 📦 Project Structure
-
-de-susu/
-├── 📁 packages/
-│   ├── ⚙️ foundry/                    # Smart Contract Package (Foundry)
-│   │   ├── 📁 contracts/              # Solidity Source Files
-│   │   │   ├── GroupPool/             # Group Pool Contract System
-│   │   │   │   ├── GroupPool.sol      # Main Upgradeable Pool Logic
-│   │   │   │   ├── GroupPoolFactory.sol # Factory for Creating Pools
-│   │   │   │   ├── IGroupPool.sol     # Interface for GroupPool
-│   │   │   │   └── IPublicResolver.sol# Interface for ENS Resolver
-│   │   │   ├── PersonalVault/         # Personal Vault Contract System
-│   │   │   │   ├── PersonalVault.sol  # Main Upgradeable Vault Logic
-│   │   │   │   ├── PersonalVaultFactory.sol # Factory for Creating Vaults
-│   │   │   │   ├── IPersonalVault.sol # Interface for PersonalVault
-│   │   │   │   └── interfaces/        # Additional Interfaces
-│   │   │   └── ...                    # Other Core Dependencies
-│   │   ├── 📁 script/                 # Deployment Scripts
-│   │   │   ├── Deploy.s.sol           # Main Deployment Script
-│   │   │   └── ...                    # Helper Scripts
-│   │   ├── 📁 test/                   # Comprehensive Test Suites
-│   │   │   ├── GroupPool/             # Tests for Group Pool System
-│   │   │   │   └── GroupPool.t.sol    # Main Test File for GroupPool
-│   │   │   ├── PersonalVault/         # Tests for Personal Vault System
-│   │   │   │   └── PersonalVault.t.sol# Main Test File for PersonalVault
-│   │   │   └── ...                    # Setup and Helper Test Files
-│   │   ├── 📄 foundry.toml            # Foundry Configuration
-│   │   └── 📄 .env                    # Environment Variables (Private Keys, RPC URLs)
-│   │
-│   └── 🌐 nextjs/                     # Frontend Package (Next.js 14)
-│       ├── 📁 app/                    # App Router Directory
-│       │   ├── 📄 page.tsx            # Homepage
-│       │   ├── 📄 layout.tsx          # Root Layout
-│       │   ├── 📁 create-vault/       # Page for Creating a Vault
-│       │   ├── 📁 create-pool/        # Page for Creating a Group Pool
-│       │   ├── 📁 dashboard/          # User Dashboard Page
-│       │   └── 📁 debug/              # Scaffold-ETH Debug Contracts Page
-│       ├── 📁 components/             # Reusable React Components
-│       │   ├── 📁 scaffold-eth/       # Scaffold-ETH Provided Components
-│       │   ├── 📁 susu/               # de-susu Custom Components
-│       │   │   ├── 📄 VaultCard.tsx   # Component to display a Vault
-│       │   │   ├── 📄 PoolCard.tsx    # Component to display a Pool
-│       │   │   └── ...
-│       │   └── ...
-│       ├── 📁 hooks/                  # Custom React Hooks
-│       │   ├── 📁 scaffold-eth/       # Scaffold-ETH Provided Hooks
-│       │   └── 📄 useDeSusuRead.ts    # Custom hooks for de-susu contracts
-│       ├── 📁 public/                 # Static Assets
-│       │   └── 📁 icons/              # SVG Icons for the project
-│       ├── 📄 scaffold.config.ts      # Main Config (Networks, Contract Info)
-│       ├── 📄 .env.local              # Frontend Environment Variables
-│       └── 📄 package.json            # Frontend Dependencies
-├── 📄 package.json                    # Root Workspace Configuration
-├── 📄 LICENSE                         # MIT License
-└── 📄 README.md                       
+| **Frontend** | Next.js, RainbowKit, wagmi | User interface and wallet connection |             
 
 ## 🚀 Quickstart
 
