@@ -105,7 +105,7 @@ const items = [
   },
 ];
 
-export default function BentoGrid1() {
+export  function BentoGrid1() {
   const containerVariants = {
     hidden: {},
     visible: {
