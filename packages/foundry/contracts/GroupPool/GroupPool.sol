@@ -8,10 +8,21 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "./IGroupPool.sol";
 import "./IPublicResolver.sol";
 
+/**
+ * @title GroupPool
+ * @dev Upgradeable savings pool contract for SusuChain
+ * Implements rotating savings and credit association (ROSCA) functionality
+ * Key Features:
+ * - UUPS upgradeable pattern for future protocol improvements
+ * - ENS integration for human-readable identity and reputation tracking
+ * - Automated contribution scheduling and enforcement
+ * - Transparent fund management with on-chain records
+ * - Gas-optimized for Base L2 operations
+ */
 contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
     using SafeERC20 for IERC20;
 
-    // Pool configuration
+    // Pool configuration - immutable after initialization
     string public override poolName;
     string public override poolDescription;
     address public override creator;
@@ -20,51 +31,77 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
     uint256 public override maturityDate;
     string public override poolENSName; // Pool's Basename (e.g., "familysavings.base.eth")
     
-    // Pool state
+    // Pool state - updated with contributions and withdrawals
     uint256 public override totalContributors;
     uint256 public override totalFunds;
     
-    // USDC token address
+    // USDC token address - stablecoin for contributions
     IERC20 public usdcToken;
     
-    // ENS-related
+    // ENS-related - for reputation and identity system
     address public publicResolver; // Upgradeable L2PublicResolver proxy on Base Sepolia: 0x85c87E548091F204c2d0350B39Ce1874f02197c6
     bytes32 public ensNode; // Hash of the ENS node for efficient record updates
     
-    // Member tracking
+    // Member tracking - comprehensive state for each participant
     struct MemberInfo {
         bool isMember;
         bool hasContributed;
         bool hasWithdrawn;
         uint256 contributionCount;
         uint256 lastContributionDate;
-        string ensName;
+        string ensName; // Member's ENS identity for reputation
     }
     
     mapping(address => MemberInfo) public members;
     mapping(address => uint256) public contributions;
     address[] public membersList;
     
-    // Modifiers
+    // Modifiers for access control and state validation
+    
+    /**
+     * @dev Restricts function to pool members only
+     */
     modifier onlyMember() {
         require(members[msg.sender].isMember, "Not a pool member");
         _;
     }
     
+    /**
+     * @dev Ensures function is called before pool maturity
+     */
     modifier beforeMaturity() {
         require(block.timestamp < maturityDate, "Pool has matured");
         _;
     }
     
+    /**
+     * @dev Ensures function is called after pool maturity
+     */
     modifier afterMaturity() {
         require(block.timestamp >= maturityDate, "Pool not matured yet");
         _;
     }
     
-    // UUPS upgrade authorization
+    // UUPS upgrade authorization - only owner can upgrade implementation
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
     
-    // Initialize function (called by factory)
+    /**
+     * @dev Initializes the pool contract (called by factory)
+     * @param _name Name of the savings pool
+     * @param _description Description of pool purpose
+     * @param _creator Address of pool creator (becomes owner)
+     * @param _members Array of member addresses
+     * @param _ensNames Array of ENS names for reputation tracking
+     * @param _contributionAmount USDC amount per contribution
+     * @param _contributionInterval Frequency of contributions
+     * @param _maturityDate Timestamp when pool matures
+     * @param _usdcToken USDC token contract address
+     * @param _publicResolver ENS resolver address
+     * @param _poolENSName Full ENS name for the pool
+     * 
+     * This function sets up the entire pool structure and initial ENS records
+     * Following UUPS upgradeable pattern initialization requirements
+     */
     function initialize(
         string memory _name,
         string memory _description,
@@ -81,6 +118,7 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         __Ownable_init(_creator);
         __UUPSUpgradeable_init();
         
+        // Set pool configuration
         poolName = _name;
         poolDescription = _description;
         creator = _creator;
@@ -90,16 +128,15 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         usdcToken = IERC20(_usdcToken);
         poolENSName = _poolENSName;
         
-        // Set resolver (checksummed upgradeable proxy for Base Sepolia; update for mainnet)
-        // publicResolver = 0x85C87e548091f204C2d0350b39ce1874f02197c6;
+        // Set ENS resolver for reputation system
         publicResolver = _publicResolver;
         
-        // Compute ENS node hash (e.g., for "familysavings.base.eth")
-        string memory label = _extractLabelFromFullName(_poolENSName); // Helper to get label
+        // Compute ENS node hash for efficient record updates
+        string memory label = _extractLabelFromFullName(_poolENSName);
         require(bytes(label).length > 0, "Invalid ENS name format");
         ensNode = keccak256(abi.encodePacked(keccak256(abi.encodePacked("base.eth")), keccak256(abi.encodePacked(label))));
         
-        // Initialize members
+        // Initialize members with their ENS identities
         require(_members.length == _ensNames.length, "Members and ENS names mismatch");
         
         for (uint256 i = 0; i < _members.length; i++) {
@@ -116,7 +153,7 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         
         totalContributors = _members.length;
         
-        // Initial text record update (e.g., set description)
+        // Set initial ENS records for transparency
         _setTextRecord("description", _description);
         
         emit PoolCreated(
@@ -132,7 +169,12 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         );
     }
     
-    // Internal helper to extract label from full name (e.g., "familysavings" from "familysavings.base.eth")
+    /**
+     * @dev Extracts label from full ENS name
+     * @param fullName Full ENS name (e.g., "familysavings.base.eth")
+     * @return label portion (e.g., "familysavings")
+     * Internal helper for ENS node computation
+     */
     function _extractLabelFromFullName(string memory fullName) internal pure returns (string memory) {
         bytes memory nameBytes = bytes(fullName);
         uint256 dotIndex = nameBytes.length;
@@ -149,23 +191,38 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         return string(labelBytes);
     }
     
-    // Internal function to set ENS text record
+    /**
+     * @dev Internal function to set ENS text records
+     * @param key Record key (e.g., "description", "totalFunds")
+     * @param value Record value
+     * Used for reputation tracking and pool transparency
+     */
     function _setTextRecord(string memory key, string memory value) internal {
         IPublicResolver(publicResolver).setText(ensNode, key, value);
     }
     
-    // Public function to update ENS text record (only owner, for reputation/attestations)
+    /**
+     * @dev Public function to update ENS records
+     * @param key Record key to update
+     * @param value New record value
+     * Only owner can update records for reputation and attestations
+     */
     function setTextRecord(string memory key, string memory value) external onlyOwner {
         _setTextRecord(key, value);
         emit ENSRecordUpdated(poolENSName, key, value);
     }
     
-    // Join the pool (only allowed members)
+    /**
+     * @dev Join the pool (formal membership activation)
+     * @param ensName Optional ENS name for reputation tracking
+     * Members must explicitly join before contributing
+     * Allows updating ENS name during join process
+     */
     function joinPool(string memory ensName) external override {
         require(members[msg.sender].isMember, "Not allowed to join this pool");
         require(!members[msg.sender].hasContributed, "Already joined and contributed");
         
-        // Update ENS name if provided
+        // Update ENS name if provided for reputation system
         if (bytes(ensName).length > 0) {
             members[msg.sender].ensName = ensName;
         }
@@ -173,55 +230,59 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         emit MemberJoined(msg.sender, members[msg.sender].ensName);
     }
     
-    // Update ENS name for a member
+    /**
+     * @dev Update ENS name for reputation tracking
+     * @param newENSName New ENS name to associate with member
+     * Allows members to update their on-chain identity
+     */
     function updateENSName(string memory newENSName) external override onlyMember {
         require(bytes(newENSName).length > 0, "ENS name cannot be empty");
         members[msg.sender].ensName = newENSName;
         emit ENSNameUpdated(msg.sender, newENSName);
     }
     
-    // Contribute USDC to the pool
+    /**
+     * @dev Make a contribution to the pool
+     * Enforces contribution schedule and updates ENS records
+     * Uses SafeERC20 for secure token transfers
+     * Updates reputation system with contribution data
+     */
     function contribute() external override onlyMember beforeMaturity {
         MemberInfo storage member = members[msg.sender];
         
-        // Check if it's time for next contribution
+        // Enforce contribution schedule
         if (member.lastContributionDate > 0) {
             uint256 nextContributionDate = getNextContributionDate(msg.sender);
             require(block.timestamp >= nextContributionDate, "Not time for next contribution yet");
         }
         
-        //  Transfer USDC from member to pool - USDC is standard ERC-20 compliant
-        // require(
-        //     usdcToken.transferFrom(msg.sender, address(this), contributionAmount),
-        //     "USDC transfer failed"
-        // );
-
-        //  Transfer USDC from member to pool - USDC is standard ERC-20 compliant
-        // Safe transfer
+        // Secure USDC transfer using SafeERC20
         usdcToken.safeTransferFrom(msg.sender, address(this), contributionAmount);
         
+        // Update member state
         member.hasContributed = true;
         member.contributionCount++;
         member.lastContributionDate = block.timestamp;
         contributions[msg.sender] += contributionAmount;
         totalFunds += contributionAmount;
         
-        // Update ENS text record for totalFunds (reputation example)
+        // Update ENS reputation records
         _setTextRecord("totalFunds", _uintToString(totalFunds));
-
-        // Update ENS record for member's individual contribution
         _setTextRecord(
             string(abi.encodePacked("member_", _uintToString(uint256(uint160(msg.sender))))),
             _uintToString(contributions[msg.sender])
         );
-        
-        // Update total contributions count
         _setTextRecord("totalContributions", _uintToString(totalFunds));
             
         emit ContributionMade(msg.sender, contributionAmount, member.contributionCount);
     }
     
-    // Individual withdrawal function
+    /**
+     * @dev Withdraw funds after pool maturity
+     * Calculates proportional share based on contributions
+     * Updates ENS records to reflect withdrawal
+     * Prevents double-spending with hasWithdrawn flag
+     */
     function withdraw() external override onlyMember afterMaturity {
         MemberInfo storage member = members[msg.sender];
         require(member.hasContributed, "No contributions to withdraw");
@@ -230,27 +291,26 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         uint256 withdrawableAmount = getWithdrawableAmount(msg.sender);
         require(withdrawableAmount > 0, "No funds available to withdraw");
         
-        // Mark as withdrawn
+        // Mark as withdrawn to prevent re-entrancy
         member.hasWithdrawn = true;
         
-        // Transfer funds
-        // require(
-        //     usdcToken.transfer(msg.sender, withdrawableAmount),
-        //     "Withdrawal failed"
-        // );
-
-        // Safe transfer
+        // Secure USDC transfer
         usdcToken.safeTransfer(msg.sender, withdrawableAmount);
         
         totalFunds -= withdrawableAmount;
         
-        // Update ENS text record for totalFunds post-withdrawal
+        // Update ENS records post-withdrawal
         _setTextRecord("totalFunds", _uintToString(totalFunds));
         
         emit Withdrawal(msg.sender, withdrawableAmount);
     }
     
-    // Helper to convert uint to string for text records
+    /**
+     * @dev Converts uint to string for ENS text records
+     * @param value Number to convert
+     * @return string representation of the number
+     * Internal helper for reputation system data formatting
+     */
     function _uintToString(uint256 value) internal pure returns (string memory) {
         if (value == 0) {
             return "0";
@@ -270,13 +330,18 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         return string(buffer);
     }
     
-    // View function to check withdrawable amount
+    /**
+     * @dev Calculates withdrawable amount for a member
+     * @param _user Member address to check
+     * @return amount USDC amount available for withdrawal
+     * Uses proportional distribution based on contribution ratio
+     */
     function getWithdrawableAmount(address _user) public view override returns (uint256) {
         if (!members[_user].hasContributed || members[_user].hasWithdrawn) {
             return 0;
         }
         
-        // Calculate the user's share based on total contributions
+        // Calculate total active contributions
         uint256 totalContributions = 0;
         
         for (uint256 i = 0; i < membersList.length; i++) {
@@ -289,15 +354,26 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
             return 0;
         }
         
-        // Calculate proportional share
+        // Calculate proportional share (contribution ratio * current total funds)
         return (contributions[_user] * totalFunds) / totalContributions;
     }
     
-    // View functions
+    // ============ VIEW FUNCTIONS ============
+    // These functions provide read access to pool state
+    
+    /**
+     * @dev Get contribution count for a member
+     */
     function getContributionCount(address _user) external view override returns (uint256) {
         return members[_user].contributionCount;
     }
     
+    /**
+     * @dev Calculate next contribution due date
+     * @param _user Member address to check
+     * @return timestamp When next contribution is due
+     * Enforces contribution schedule discipline
+     */
     function getNextContributionDate(address _user) public view override returns (uint256) {
         MemberInfo memory member = members[_user];
         if (member.lastContributionDate == 0) {
@@ -316,7 +392,14 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         return member.lastContributionDate + intervalSeconds;
     }
 
-    // Get all members with their contribution amounts and ENS names
+    /**
+     * @dev Get comprehensive member contribution data
+     * @return memberAddresses Array of all member addresses
+     * @return ensNames Array of corresponding ENS names
+     * @return contributionAmounts Array of total contributions
+     * @return contributionCounts Array of contribution frequencies
+     * Useful for dashboards and analytics
+     */
     function getAllMemberContributions() external view returns (
         address[] memory memberAddresses,
         string[] memory ensNames,
@@ -336,7 +419,15 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         }
     }
 
-    // Get individual member contribution details
+    /**
+     * @dev Get detailed contribution information for a member
+     * @param member Address to get details for
+     * @return ensName Member's ENS identity
+     * @return totalContributed Total USDC contributed
+     * @return contributionCount Number of contributions made
+     * @return lastContributionDate Timestamp of last contribution
+     * @return nextContributionDue Timestamp for next contribution
+     */
     function getMemberContributionDetails(address member) external view returns (
         string memory ensName,
         uint256 totalContributed,
@@ -356,7 +447,11 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         );
     }
 
-    // Add helper function for member-specific records
+    /**
+     * @dev Internal function to update member-specific ENS records
+     * @param member Address to update records for
+     * Part of reputation and attestation system
+     */
     function updateMemberENSRecord(address member) internal {
         bytes32 memberNode = keccak256(abi.encodePacked(ensNode, keccak256(abi.encodePacked("members"))));
         IPublicResolver(publicResolver).setText(
@@ -366,6 +461,7 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         );
     }
     
+    // Additional view functions for state access
     function getMemberENS(address _user) external view override returns (string memory) {
         return members[_user].ensName;
     }
@@ -382,11 +478,19 @@ contract GroupPool is IGroupPool, UUPSUpgradeable, OwnableUpgradeable {
         return members[_user].isMember;
     }
     
-    // Additional helper functions
+    /**
+     * @dev Get all member addresses
+     * @return Array of all pool members
+     */
     function getMembers() external view returns (address[] memory) {
         return membersList;
     }
     
+    /**
+     * @dev Get addresses of members who have contributed
+     * @return Array of active contributor addresses
+     * Useful for tracking participation rates
+     */
     function getActiveContributors() external view returns (address[] memory) {
         address[] memory active = new address[](membersList.length);
         uint256 count = 0;
