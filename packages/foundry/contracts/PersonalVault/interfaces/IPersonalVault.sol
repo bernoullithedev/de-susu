@@ -16,5 +16,4 @@ interface IPersonalVault {
     function getLockEndTime() external view returns (uint256);
     function isMature() external view returns (bool);
     function timeUntilMaturity() external view returns (uint256);
-    function setTextRecord(string memory key, string memory value) external;
 }
