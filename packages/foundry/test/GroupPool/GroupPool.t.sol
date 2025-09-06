@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 import "../../contracts/GroupPool/GroupPool.sol";
 import "../../contracts/GroupPool/GroupPoolFactory.sol";
 import "../../contracts/GroupPool/IGroupPool.sol";
-import "../../contracts/GroupPool/IPublicResolver.sol";
+import "../../contracts/PersonalVault/interfaces/IPublicResolver.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 // Mock USDC token for testing
@@ -117,38 +117,40 @@ contract GroupPoolTest is Test {
     uint256 public constant REGISTRATION_FEE = 0.01 ether;
     
     function setUp() public {
-        vm.startPrank(owner);
-        
-        // Deploy mock USDC
-        usdc = new MockUSDC();
+    vm.startPrank(owner);
+    
+    // Deploy mock USDC
+    usdc = new MockUSDC();
 
-        // Deploy mock ENS resolver
-        ensResolver = new MockENSResolver();
-        
-        // Deploy mock registrar controller
-        registrarController = new MockRegistrarController(address(ensResolver));
-        
-        // Deploy factory with USDC token address and owner
-        factory = new GroupPoolFactory(
-            address(usdc),
-            owner
-        );
-        
-        // Update the resolver and registrar addresses in factory to use our mocks
-        factory.updatePublicResolver(address(ensResolver));
-        factory.updateRegistrarController(address(registrarController));
-        
-        // Mint USDC to members
-        usdc.mint(member1, 1000 * 10 ** 6);
-        usdc.mint(member2, 1000 * 10 ** 6);
-        usdc.mint(member3, 1000 * 10 ** 6);
-        
-        // Give owner some ETH for registration fees
-        vm.deal(owner, 10 ether);
-        vm.deal(member1, 10 ether);
-        
-        vm.stopPrank();
-    }
+    // Deploy mock ENS resolver
+    ensResolver = new MockENSResolver();
+    
+    // Deploy mock registrar controller
+    registrarController = new MockRegistrarController(address(ensResolver));
+    
+    // Deploy factory with all required arguments
+    factory = new GroupPoolFactory(
+        address(usdc),
+        owner,
+        address(registrarController),  // 3rd argument
+        address(ensResolver)           // 4th argument
+    );
+    
+    // Remove these lines since they're now set in constructor:
+    // factory.updatePublicResolver(address(ensResolver));
+    // factory.updateRegistrarController(address(registrarController));
+    
+    // Mint USDC to members
+    usdc.mint(member1, 1000 * 10 ** 6);
+    usdc.mint(member2, 1000 * 10 ** 6);
+    usdc.mint(member3, 1000 * 10 ** 6);
+    
+    // Give owner some ETH for registration fees
+    vm.deal(owner, 10 ether);
+    vm.deal(member1, 10 ether);
+    
+    vm.stopPrank();
+}
     
     function test_CreatePoolWithENS() public {
         vm.startPrank(owner);
