@@ -74,6 +74,7 @@ export default function Page() {
                 ones with ease!
               </p>
             </div>
+            {/* <BasePayButton /> */}
             {/* <Button className="px-3">Deposit</Button> */}
          <CreateVault />
           </div>

@@ -80,6 +80,7 @@ console.log("List all Pools:", pools)
     }
   // Debug network status
   const isCorrectNetwork = chain?.id === 84532;
+  console.log("Target network:",targetNetwork)
   const contractsAvailable = targetNetwork.id === 84532;
 
   if (!isCorrectNetwork || !contractsAvailable) {
