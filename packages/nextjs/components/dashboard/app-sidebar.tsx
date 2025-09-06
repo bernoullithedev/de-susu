@@ -43,7 +43,7 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "#",
+          url: "/dashboard",
           icon: RiScanLine,
         },
         {
@@ -52,8 +52,8 @@ const data = {
           icon: RiBardLine,
         },
         {
-          title: "Contacts",
-          url: "#",
+          title: "Community",
+          url: "/dashboard/community",
           icon: RiUserFollowLine,
           isActive: true,
         },
