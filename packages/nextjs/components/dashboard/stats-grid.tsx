@@ -61,7 +61,7 @@ export function StatsGrid({ stats }: StatsGridProps) {
     //chainId: baseSepolia.id,
     token:"0x036CbD53842c5426634e7929541eC2318f3dCF7e"
   })
-  const balanceStat={
+  const balanceStat:StatsCardProps={
     title: "Balance",
     value: `$${data?.formatted}`||"0",
     change: {

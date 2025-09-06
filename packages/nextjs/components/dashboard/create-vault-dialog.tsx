@@ -28,7 +28,7 @@ export function CreateVaultDialog({ open, onOpenChange }: CreateVaultDialogProps
     try {
    const result =  await writeContractAsync({
         functionName: "createVault",
-        args: [BigInt(60 * 60 * 24 * 180), "Bern Vault"], // 180d lock
+        args: [BigInt(60 * 60 * 24 * 1), "Bern Vault"], // 1d lock
         value: parseEther("0.01"),
       });
 

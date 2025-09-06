@@ -1184,7 +1184,7 @@ const deployedContracts = {
       deployedOnBlock: 30661187,
     },
     PersonalVaultFactory: {
-      address: "0xe176bcb6390148036f35d1f2b0e2c563b7078286",
+      address: "0x3505776cfb028fec11eb6b67db443c5a502229c0",
       abi: [
         {
           type: "constructor",
@@ -1195,7 +1195,7 @@ const deployedContracts = {
               internalType: "address",
             },
             {
-              name: "_registrarController",
+              name: "_ensRegistry",
               type: "address",
               internalType: "address",
             },
@@ -1204,7 +1204,42 @@ const deployedContracts = {
               type: "address",
               internalType: "address",
             },
+            {
+              name: "_parentName",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "_parentNamehash",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
           ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "acceptDomainOwnership",
+          inputs: [],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "adminSetSubnodeOwner",
+          inputs: [
+            {
+              name: "_labelHash",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "_newOwner",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [],
           stateMutability: "nonpayable",
         },
         {
