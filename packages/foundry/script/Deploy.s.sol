@@ -5,37 +5,36 @@ pragma solidity ^0.8.19;
 import "forge-std/Script.sol";
 import "../contracts/GroupPool/GroupPoolFactory.sol";
 import "../contracts/PersonalVault/PersonalVaultFactory.sol";
-import "./utils/MockContracts.sol";
 
 contract Deploy is Script {
     function run() external {
         vm.startBroadcast();
 
-        // For local development, deploy mocks first
-        MockUSDC usdc = new MockUSDC();
-        MockRegistrarController registrar = new MockRegistrarController();
-        MockPublicResolver resolver = new MockPublicResolver();
+        // Base Sepolia contract addresses
+        address usdcToken = 0x036CbD53842c5426634e7929541eC2318f3dCF7e; // USDC on Base Sepolia
+        address registrarController = 0x49aE3cC2e3AA768B1e5654f5D3C6002144A59581; // Basenames Registrar
+        address publicResolver = 0x85C87e548091f204C2d0350b39ce1874f02197c6; // Basenames Resolver
 
-        console.log("Mock contracts deployed:");
-        console.log("USDC:", address(usdc));
-        console.log("Registrar:", address(registrar));
-        console.log("Resolver:", address(resolver));
+        console.log("Using Base Sepolia addresses:");
+        console.log("USDC:", usdcToken);
+        console.log("Registrar Controller:", registrarController);
+        console.log("Public Resolver:", publicResolver);
 
         // Deploy GroupPoolFactory
         GroupPoolFactory groupPoolFactory = new GroupPoolFactory(
-            address(usdc),
+            usdcToken,
             tx.origin,
-            address(registrar),
-            address(resolver)
+            registrarController,
+            publicResolver
         );
 
         console.log("GroupPoolFactory deployed at:", address(groupPoolFactory));
 
         // Deploy PersonalVaultFactory
         PersonalVaultFactory personalVaultFactory = new PersonalVaultFactory(
-            address(usdc),
-            address(registrar),
-            address(resolver)
+            usdcToken,
+            registrarController,
+            publicResolver
         );
 
         console.log("PersonalVaultFactory deployed at:", address(personalVaultFactory));

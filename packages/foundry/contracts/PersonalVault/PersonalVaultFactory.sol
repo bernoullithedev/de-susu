@@ -30,58 +30,52 @@ contract PersonalVaultFactory is Ownable {
         publicResolver = _publicResolver;
     }
 
-    function createVault(uint256 _lockDuration, string memory _vaultName) external payable returns (address) {
-        // Sanitize name and create ENS name (checks)
-        string memory label = sanitizeName(_vaultName);
-        string memory ensName = string(abi.encodePacked(label, ".base.eth"));
-        
-        // Check availability and compute price (checks)
-        require(IRegistrarController(registrarController).available(label), "Name not available");
-        uint256 duration = 31557600; // 1 year
-        uint256 price = IRegistrarController(registrarController).rentPrice(label, duration);
-        require(msg.value >= price, "Insufficient registration fee");
-        
-        // Create a new proxy for the user (effects start)
-        address vault = implementation.clone();
-        
-        // Initialize the vault (safe internal call, as it's our code)
-        bytes memory initData = abi.encodeCall(
-            IPersonalVault.initialize,
-            (msg.sender, _lockDuration, usdc, publicResolver, ensName)
-        );
-        (bool success, ) = vault.call(initData);
-        require(success, "Initialization failed");
-
-        // Store the vault and emit event (effects complete)
-        allVaults.push(vault);
-        userVaults[msg.sender].push(vault);
-        emit VaultCreated(msg.sender, vault, ensName);
-        
-        // Register ENS name (external interaction)
-        bytes32 node = keccak256(abi.encodePacked(keccak256(abi.encodePacked("base.eth")), keccak256(abi.encodePacked(label))));
-        bytes[] memory data = new bytes[](3);
-        
-        data[0] = abi.encodeCall(IPublicResolver.setAddr, (node, vault));
-        data[1] = abi.encodeCall(IPublicResolver.setName, (node, ensName));
-        data[2] = abi.encodeCall(IPublicResolver.setText, (node, "protocol", "SusuChain Personal Vault"));
-        
-        IRegistrarController(registrarController).register{value: price}(
-            label,
-            vault, // Owner is the vault itself
-            duration,
-            publicResolver,
-            data,
-            true
-        );
-        
-        // Refund excess ETH (safe last step)
-        if (msg.value > price) {
-            (bool refundSuccess, ) = payable(msg.sender).call{value: msg.value - price}("");
-            require(refundSuccess, "Refund failed");
-        }
-
-        return vault;
-    }
+    function createVault(uint256 _lockDuration, string memory _vaultName)
+    external payable returns (address)
+  {
+      string memory label = sanitizeName(_vaultName);
+      require(bytes(label).length > 0, "Empty label");
+  
+      // 1) Check availability and price
+      require(IRegistrarController(registrarController).available(label), "Name not available");
+      uint256 duration = 31557600; // 1 year
+      uint256 price = IRegistrarController(registrarController).rentPrice(label, duration);
+      require(msg.value >= price, "Insufficient registration fee");
+  
+      // 2) Clone vault
+      address vault = implementation.clone();
+  
+      // 3) Register name to the vault first (set resolver, but pass empty data initially)
+      bytes[] memory emptyData = new bytes[](0);
+      IRegistrarController(registrarController).register{value: price}(
+          label,
+          vault,              // owner is the vault
+          duration,
+          publicResolver,
+          emptyData,          // do NOT try to set records yet
+          true
+      );
+  
+      // 4) Now initialize (vault can safely write resolver records)
+      bytes memory initData = abi.encodeCall(
+          IPersonalVault.initialize,
+          (msg.sender, _lockDuration, usdc, publicResolver, string(abi.encodePacked(label, ".base.eth")))
+      );
+      (bool success, ) = vault.call(initData);
+      require(success, "Initialization failed");
+  
+      // 5) Bookkeeping and refunds
+      allVaults.push(vault);
+      userVaults[msg.sender].push(vault);
+      emit VaultCreated(msg.sender, vault, string(abi.encodePacked(label, ".base.eth")));
+  
+      if (msg.value > price) {
+          (bool refundSuccess, ) = payable(msg.sender).call{value: msg.value - price}("");
+          require(refundSuccess, "Refund failed");
+      }
+      return vault;
+  }
+  
 
     // Sanitize name for ENS compatibility
     function sanitizeName(string memory _name) internal pure returns (string memory) {

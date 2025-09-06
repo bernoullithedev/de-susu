@@ -9,7 +9,8 @@ import { WagmiProvider } from "wagmi";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { OnchainKitProvider } from '@coinbase/onchainkit';
-import { base,baseSepolia } from 'wagmi/chains'; // add baseSepolia for testing
+import { baseSepolia } from 'wagmi/chains'; // add baseSepolia for testing
+import { Toaster } from "./ui/sonner";
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -30,7 +31,7 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
   return (
     <OnchainKitProvider
     apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
-    chain={base} 
+    chain={baseSepolia} 
   >
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
@@ -42,6 +43,7 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
           {/* <ScaffoldEthApp>
             </ScaffoldEthApp> */}
             {children}
+            <Toaster  />
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

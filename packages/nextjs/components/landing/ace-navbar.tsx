@@ -4,7 +4,7 @@ import {
   NavItems,
   NavbarLogo,
 } from "@/components/ui/resizable-navbar";
-import BaseAccountConnectButton from "./loginButton";
+// import BaseAccountConnectButton from "./loginButton";
 import MobileNavigation from "./mobile-nav";
 import { WalletComponents } from "../dashboard/profile";
 

@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Plus } from "lucide-react"
 import { toast } from "sonner"
+import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth"
+import { parseEther } from "viem"
 
 interface CreateVaultDialogProps {
   open: boolean
@@ -15,13 +17,36 @@ interface CreateVaultDialogProps {
 }
 
 export function CreateVaultDialog({ open, onOpenChange }: CreateVaultDialogProps) {
+  const { writeContractAsync,isPending,error } = useScaffoldWriteContract({ contractName: "PersonalVaultFactory" });
   const [vaultType, setVaultType] = useState("personal")
+  console.log("Hook state:", { writeContractAsync, isPending, error });
+  async function handleCreateVault() {
+    if (!writeContractAsync) {
+      toast.error("Contract not ready. Please connect wallet and try again.");
+      return;
+    }
+    try {
+   const result =  await writeContractAsync({
+        functionName: "createVault",
+        args: [BigInt(60 * 60 * 24 * 180), "Bern Vault"], // 180d lock
+        value: parseEther("0.01"),
+      });
 
-  const handleCreateVault = () => {
-    toast.success("Vault Created!",{  
-      description: `Your ${vaultType} vault has been created successfully.`,
-    })
-    onOpenChange(false)
+if(result){
+  toast.success("Vault Created!",{  
+        description: `Your ${vaultType} vault has been created successfully. With address: ${result}`,
+  }
+)
+}else{
+  toast.info(result)
+}
+   
+     console.log("Result:",result)
+      // onOpenChange(false)
+    } catch (error) {
+      toast.error("Failed to create Vault")
+      console.log("Failed to create vault:",error)
+    }
   }
 
   return (
@@ -71,7 +96,7 @@ export function CreateVaultDialog({ open, onOpenChange }: CreateVaultDialogProps
             </div>
           </TabsContent>
 
-          <Button onClick={handleCreateVault} className="w-full gap-2">
+          <Button disabled={!writeContractAsync || isPending} onClick={handleCreateVault} className="w-full gap-2">
             <Plus className="w-4 h-4" />
             Create Vault
           </Button>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { CreateVaultDialog } from "../dashboardOld/create-vault-dialog"
+import { CreateVaultDialog } from "../dashboard/create-vault-dialog"
 import { Button } from "../ui/button"
 import { Plus } from "lucide-react"
 

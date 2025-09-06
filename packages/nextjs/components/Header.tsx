@@ -8,6 +8,7 @@ import { hardhat } from "viem/chains";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
+import { useAccount } from "wagmi";
 
 type HeaderMenuLink = {
   label: string;
@@ -58,7 +59,9 @@ export const HeaderMenuLinks = () => {
  */
 export const Header = () => {
   const { targetNetwork } = useTargetNetwork();
+  const { chain } = useAccount();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
+  const isCorrectNetwork = chain?.id === 84532;
 
   const burgerMenuRef = useRef<HTMLDetailsElement>(null);
   useOutsideClick(burgerMenuRef, () => {
@@ -94,7 +97,17 @@ export const Header = () => {
           <HeaderMenuLinks />
         </ul>
       </div>
-      <div className="flex items-center grow justify-end mr-4">
+      <div className="flex items-center grow justify-end mr-4 gap-2">
+        {/* Network Status Indicator */}
+        {chain && (
+          <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+            isCorrectNetwork
+              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+              : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+          }`}>
+            {chain.name} ({chain.id})
+          </div>
+        )}
         <RainbowKitCustomConnectButton />
         {isLocalNetwork && <FaucetButton />}
       </div>

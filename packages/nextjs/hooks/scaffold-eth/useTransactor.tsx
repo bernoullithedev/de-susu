@@ -67,7 +67,7 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       } else {
         throw new Error("Incorrect transaction passed to transactor");
       }
-      notification.remove(notificationId);
+      notification.dismiss(notificationId);
 
       blockExplorerTxURL = chainId ? getBlockExplorerTxLink(chainId, transactionHash) : "";
 
@@ -79,7 +79,7 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
         hash: transactionHash,
         confirmations: options?.blockConfirmations,
       });
-      notification.remove(notificationId);
+      notification.dismiss(notificationId);
 
       if (transactionReceipt.status === "reverted") throw new Error("Transaction reverted");
 
@@ -93,7 +93,7 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       if (options?.onBlockConfirmation) options.onBlockConfirmation(transactionReceipt);
     } catch (error: any) {
       if (notificationId) {
-        notification.remove(notificationId);
+        notification.dismiss(notificationId);
       }
       console.error("⚡️ ~ file: useTransactor.ts ~ error", error);
       const message = getParsedErrorWithAllAbis(error, chainId as AllowedChainIds);

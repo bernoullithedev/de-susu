@@ -1,9 +1,10 @@
 "use client";
 import React from 'react'
 import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
-import { Toaster } from "react-hot-toast";
+
 import { Footer } from "~~/components/Footer";
 import { Header } from "~~/components/Header";
+import { Toaster } from "~~/components/ui/sonner";
 export default function layout({
     children,
   }: Readonly<{
