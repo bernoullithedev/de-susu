@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/resizable-navbar";
 import BaseAccountConnectButton from "./loginButton";
 import MobileNavigation from "./mobile-nav";
+import { WalletComponents } from "../dashboard/profile";
 
 
 export function NavbarDemo() {
@@ -31,8 +32,8 @@ export function NavbarDemo() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
-            <BaseAccountConnectButton />
-            
+            {/* <BaseAccountConnectButton /> */}
+            <WalletComponents />
           </div>
         </NavBody>
 

@@ -3,6 +3,7 @@ import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithPro
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
+// import '@coinbase/onchainkit/styles.css';
 
 export const metadata = getMetadata({
   title: "De Susu",
