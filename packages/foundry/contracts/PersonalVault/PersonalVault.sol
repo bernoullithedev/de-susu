@@ -35,7 +35,8 @@ contract PersonalVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgrade
         uint256 _lockDuration, 
         address _usdc,
         address _publicResolver,
-        string memory _vaultENSName
+        string memory _vaultENSName,
+        bytes32 _parentNamehash // NEW: Pass the namehash of the parent domain (e.g., namehash("de-susu-demo.base.eth"))
     ) public initializer {
         __UUPSUpgradeable_init();
         __ReentrancyGuard_init();
@@ -46,9 +47,11 @@ contract PersonalVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgrade
         publicResolver = _publicResolver;
         vaultENSName = _vaultENSName;
         
-        // Compute ENS node hash
+        // Compute ENS node hash CORRECTLY for a subdomain
         string memory label = _extractLabelFromFullName(_vaultENSName);
-        ensNode = keccak256(abi.encodePacked(keccak256(abi.encodePacked("base.eth")), keccak256(abi.encodePacked(label))));
+        bytes32 labelHash = keccak256(abi.encodePacked(label));
+        // This is the correct way to calculate the node for a subdomain
+        ensNode = keccak256(abi.encodePacked(_parentNamehash, labelHash));
         
         // Set initial text records
         _setTextRecord("description", "Personal Savings Vault");
