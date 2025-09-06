@@ -1,80 +1,154 @@
-# 🏗 Scaffold-ETH 2
+# de-susu 🏺
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+[![ETHAccra Hackathon](https://img.shields.io/badge/Hackathon-ETHAccra%202025-blue)](https://taikai.network/hackathons/ethaccra-2025)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Built on Base](https://img.shields.io/badge/Built_on-Base-0052FF)](https://base.org)
+[![Built with Scaffold-ETH 2](https://img.shields.io/badge/Built_with-Scaffold--ETH_2-FF6B6B)](https://github.com/scaffold-eth/scaffold-eth-2)
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+## Overview
 
-⚙️ Built using NextJS, RainbowKit, Foundry, Wagmi, Viem, and Typescript.
+**de-susu** is a decentralized protocol on Base that enables secure, transparent, and self-custodial personal and group savings, directly inspired by the traditional "Susu" savings circles common in West Africa.
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+It replaces fraud-prone, informal systems with smart contracts, allowing users to save USDC in a Personal Vault or create Group Pools with friends and family. Every action is recorded on-chain, and users build their on-chain savings reputation linked to a human-readable ENS name.
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+## 🎯 Core Features (Implemented)
 
-## Requirements
+*   **Frictionless Web2-like Onboarding:** Sign in with Google or WhatsApp using **Base Account**. No seed phrases, no confusing wallet creation.
+*   **In-App Funding:** Solve the "How do I get USDC?" problem with **Base Pay**, a direct fiat on-ramp using a debit/credit card.
+*   **Personal Savings Vaults:** Deposit USDC into a personal, time-locked vault. Funds can only be withdrawn after a maturity date.
+*   **Group Savings Pools (ROSCA):** Create a pool with custom rules (contribution amount, interval, members). ENS names provide easy, shareable identities for members.
+*   **On-Chain Reputation:** All savings activity is transparently recorded on the **Ethereum Name Service (ENS)**. Your `name.susu.eth` profile becomes your verifiable savings history.
+*   **Gasless Experience (Target State):** Designed to use **Base's Paymaster** to sponsor gas fees, so users only think about USDC, not ETH. *(Frontend integration in progress)*
 
-Before you begin, you need to install the following tools:
+## 🛠️ Tech Stack
 
-- [Node (>= v20.18.3)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Blockchain** | [Base](https://base.org) | Low-cost L2 for transactions |
+| **Smart Contracts** | Solidity, Foundry | Core protocol logic |
+| **Onboarding** | [Base Account](https://docs.base.org/guides/onchainkit) | Social login & smart wallets |
+| **Fiat On-Ramp** | [Base Pay](https://docs.base.org/guides/base-pay) | Buy USDC with card in-app |
+| **Identity** | [ENS](https://ens.domains) | Human-readable names & reputation |
+| **Frontend Framework**| [Scaffold-ETH 2](https://github.com/scaffold-eth/scaffold-eth-2) | Next.js boilerplate for fast development |
+| **Frontend** | Next.js, RainbowKit, wagmi | User interface and wallet connection |             
 
-## Quickstart
+## 🚀 Quickstart
 
-To get started with Scaffold-ETH 2, follow the steps below:
+### Prerequisites
 
-1. Install dependencies if it was skipped in CLI:
+- [Node.js](https://nodejs.org/en/) (>= v20.18.3)
+- [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/)
+- [Foundry](https://book.getfoundry.sh/getting-started/installation) (For smart contract development)
+- A wallet (MetaMask recommended for testing)
 
-```
-cd my-dapp-example
-yarn install
-```
+### Installation & Local Development
 
-2. Run a local network in the first terminal:
+1.  **Clone the repository and install dependencies:**
 
-```
-yarn chain
-```
+    ```bash
+    git clone <your-repo-url>
+    cd de-susu
+    yarn install
+    ```
 
-This command starts a local Ethereum network using Foundry. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `packages/foundry/foundry.toml`.
+2.  **Run a local blockchain network (Terminal 1):**
 
-3. On a second terminal, deploy the test contract:
+    ```bash
+    yarn chain
+    ```
+    This starts a local Anvil network at `http://localhost:8545`.
 
-```
-yarn deploy
-```
+3.  **Deploy the contracts (Terminal 2):**
 
-This command deploys a test smart contract to the local network. The contract is located in `packages/foundry/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/foundry/script` to deploy the contract to the network. You can also customize the deploy script.
+    ```bash
+    yarn deploy
+    ```
+    This compiles and deploys the `GroupPoolFactory` and `PersonalVaultFactory` contracts to your local network. The contract addresses are automatically saved to `packages/nextjs/scaffold.config.ts`.
 
-4. On a third terminal, start your NextJS app:
+4.  **Start the frontend (Terminal 3):**
 
-```
-yarn start
-```
+    ```bash
+    yarn start
+    ```
+    Your dApp will open at `http://localhost:3000`.
 
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
+5.  **Run smart contract tests:**
+    To ensure everything works, run the comprehensive test suites:
+    ```bash
+    # Run all tests
+    forge test
 
-Run smart contract test with `yarn foundry:test`
+    # Run specific test files
+    forge test --match-path test/GroupPool/GroupPool.t.sol -vvv
+    forge test --match-path test/PersonalVault/PersonalVault.t.sol -vvv
+    ```
 
-- Edit your smart contracts in `packages/foundry/contracts`
-- Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
-- Edit your deployment scripts in `packages/foundry/script`
+### Interacting with the dApp
+
+1.  **On your local frontend (`http://localhost:3000`), connect your wallet.**
+2.  **Get test ETH:** Use the faucet on the bottom left of the page to get test ETH for your local wallet.
+3.  **Get test USDC:** Our deployment scripts mint test USDC to the deployer. You can use the `Debug Contracts` page to transfer USDC to your wallet address for testing.
+4.  **Create a Vault or Pool:** Use the frontend interface to create your first personal vault or group pool!
+
+## 🌐 Deployment
+
+### Deploying to Base Testnet (Base Sepolia)
+
+1.  **Set up environment variables:**
+    ```bash
+    cd packages/foundry
+    cp .env.example .env
+    ```
+    Edit `.env` and add your wallet's private key and a Base Sepolia RPC URL.
+    ```
+    PRIVATE_KEY=your_wallet_private_key_here
+    RPC_URL=https://sepolia.base.org
+    ```
+
+2.  **Deploy to Base Sepolia:**
+    ```bash
+    forge script script/Deploy.s.sol:DeployScript --rpc-url $RUBY_RPC_URL --broadcast --verify -vvvv
+    # or using the yarn script
+    yarn deploy --network baseSepolia
+    ```
+
+3.  **Update the frontend configuration:**
+    After deployment, update the `targetNetworks` array in `packages/nextjs/scaffold.config.ts` to include `baseSepolia` and add the new contract addresses.
+
+### Deploying the Frontend
+
+The frontend is a standard Next.js app. You can deploy it to Vercel, Netlify, or any other platform.
+
+1.  **Build the project:**
+    ```bash
+    yarn build
+    ```
+
+2.  **Deploy to Vercel:**
+    ```bash
+    # Install Vercel CLI
+    npm i -g vercel
+
+    # Deploy from the nextjs directory
+    cd packages/nextjs
+    vercel --prod
+    ```
+    Ensure your environment variables (like `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`) are set in your deployment platform.
+
+## 🧪 Testing
+
+This project includes a comprehensive suite of Foundry tests that validate all core functionality, including ENS integration.
 
 
-## Documentation
+# Run all tests
+forge test
 
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
+# Run tests with detailed traces
+forge test -vvv
 
-To know more about its features, check out our [website](https://scaffoldeth.io).
+# Run tests for a specific contract
+forge test --match-contract GroupPoolTest
+forge test --match-contract PersonalVaultTest
 
-## Contributing to Scaffold-ETH 2
-
-We welcome contributions to Scaffold-ETH 2!
-
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+##  📄 License
+This project is licensed under the MIT License. See the LICENSE file for details.

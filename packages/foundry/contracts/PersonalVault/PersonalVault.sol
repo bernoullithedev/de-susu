@@ -154,11 +154,6 @@ contract PersonalVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgrade
         return createdAt + lockDuration;
     }
 
-    // Public function to update ENS text record (for reputation/attestations)
-    function setTextRecord(string memory key, string memory value) external onlyOwner {
-        _setTextRecord(key, value);
-    }
-
     // Required function for UUPS upgradability
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
