@@ -83,10 +83,10 @@ export default function Page() {
             stats={[
               {
                 title: "Total Saved",
-                value: "427,296",
+                value: "-",
                 change: {
-                  value: "+12%",
-                  trend: "up",
+                  value: "-",
+                  trend: "down",
                 },
                 icon: (
                   <svg
@@ -101,10 +101,10 @@ export default function Page() {
               },
               {
                 title: "This Month",
-                value: "$37,429",
+                value: "-",
                 change: {
-                  value: "+42%",
-                  trend: "up",
+                  value: "-",
+                  trend: "down",
                 },
                 icon: (
                   <svg
@@ -117,24 +117,7 @@ export default function Page() {
                   </svg>
                 ),
               },
-              {
-                title: "Balance",
-                value: "$82,439",
-                change: {
-                  value: "+37%",
-                  trend: "up",
-                },
-                icon: (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={20}
-                    height={20}
-                    fill="currentColor"
-                  >
-                    <path d="M10 0c5.523 0 10 4.477 10 10s-4.477 10-10 10S0 15.523 0 10 4.477 0 10 0Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm3.833 3.337a.596.596 0 0 1 .763.067.59.59 0 0 1 .063.76c-2.18 3.046-3.38 4.678-3.598 4.897a1.5 1.5 0 0 1-2.122-2.122c.374-.373 2.005-1.574 4.894-3.602ZM15.5 9a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm-11 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm2.318-3.596a1 1 0 1 1-1.414 1.414 1 1 0 0 1 1.414-1.414ZM10 3.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z" />
-                  </svg>
-                ),
-              },
+           
               // {
               //   title: "Referrals",
               //   value: "3,497",
